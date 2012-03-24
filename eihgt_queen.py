@@ -14,34 +14,37 @@ def showboard(board):
         print row
     print 
 
-def setQueen(board, putNum):
+def setQueen(board, rowIndex):
     size = len(board)
-    print putNum
-    if  size - 1 < putNum:
+    print rowIndex
+    if  size - 1 < rowIndex:
         return board
-    col = board[putNum]
-    index = 0
+    col = board[rowIndex]
+    colIndex = 0
     boards=[]
     for val in col:
         if val == NONE:
             newBoard = deepcopy(board)
-            newBoard[putNum][index] = PUT_QUEEN
-            newBoard = checkCantPut(putNum + 1, index, newBoard, 0, lambda setIndex, size : True)
-            newBoard = checkCantPut(putNum + 1, index, newBoard, 1, lambda setIndex, size : setIndex < size)
-            newBoard = checkCantPut(putNum + 1, index, newBoard, -1, lambda setIndex, size : -1 < setIndex)
-            #if putNum == 0 :
+            newBoard[rowIndex][colIndex] = PUT_QUEEN
+            newBoard = checkCantPut(rowIndex + 1, colIndex, newBoard, 0, lambda setIndex, size : True)
+            newBoard = checkCantPut(rowIndex + 1, colIndex, newBoard, 1, lambda setIndex, size : setIndex < size)
+            showboard(newBoard)
+            newBoard = checkCantPut(rowIndex + 1, colIndex, newBoard, -1, lambda setIndex, size : -1 < setIndex)
+            #if rowIndex == 0 :
                 #showboard(newBoard)
-            boards.append(setQueen(newBoard, putNum + 1))
-        index = index + 1 
+            boards.append(setQueen(newBoard, rowIndex + 1))
+        colIndex = colIndex + 1 
     return boards
             
-def checkCantPut(colIndex, preRowIndex, board, thread, condition):
-    if len(board) - 1 < colIndex :
+def checkCantPut(rowIndex, preColIndex, board, thread, condition):
+    if len(board) - 1 < rowIndex :
         return board
-    index= preRowIndex + thread
+    index= preColIndex + thread
+    print index
     if condition(index, len(board)):
-        board[colIndex][index] = CANT_PUT
-        return checkCantPut(colIndex+1, index, board, thread , condition)
+        board[rowIndex][index] = CANT_PUT
+        showboard(board)
+        return checkCantPut(rowIndex+1, index, board, thread , condition)
     return board
 
     
